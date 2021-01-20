@@ -24,13 +24,10 @@ namespace Albo1125.Common
         private static int Index = -1;
         public static void DisplayUpdates()
         {
-            string ModsWithErrors = "";
             foreach (string s in PluginsDownloadLink.Select(x => x.Item1).Distinct().ToList())
             {
-                ModsWithErrors += s + ",";
+                Game.DisplayNotification("web_lossantospolicedept", "web_lossantospolicedept", "Plug-in Update", s, $"The plug-in {s} has update available.");
             }
-            Popup pop = new Popup("Albo1125.Common Update Check", "Updates are available for the following modifications: " + ModsWithErrors, new List<string>() { "Continue" }, false, false, NextUpdateCallback);
-            pop.Display();
         }
 
         private static void NextUpdateCallback(Popup p)
@@ -58,11 +55,11 @@ namespace Albo1125.Common
                 Game.LogTrivial("GoToDownload pressed.");
                 if (PluginsDownloadLink.Count > Index && Index >= 0)
                 {
-                    System.Diagnostics.Process.Start(PluginsDownloadLink[Index].Item2);
+                    Process.Start(PluginsDownloadLink[Index].Item2);
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start("https://youtu.be/af434m72rIo?list=PLEKypmos74W8PMP4k6xmVxpTKdebvJpFb");
+                    Process.Start("https://youtu.be/af434m72rIo?list=PLEKypmos74W8PMP4k6xmVxpTKdebvJpFb");
                 }
                 p.Display();
             }
@@ -162,13 +159,14 @@ namespace Albo1125.Common
                 }
 
             }
-            catch (System.Threading.ThreadAbortException e)
+            catch (ThreadAbortException)
             {
-
+                Game.LogTrivial("Aborting thread");
             }
             catch (Exception e)
             {
                 Game.LogTrivial("Error while checking " + ModificationName + " for updates.");
+                Game.LogTrivial(e.ToString());
             }
         }
 
